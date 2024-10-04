@@ -92,8 +92,3 @@ window.addEventListener('touchstart', (event) => {
 // Inicia o jogo ao carregar a página
 startGame();
 
-    }
-});
-
-// Inicia o jogo ao carregar a página
-startGame();
