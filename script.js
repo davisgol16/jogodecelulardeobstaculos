@@ -2,7 +2,7 @@ const gameArea = document.getElementById('gameArea');
 const player = document.getElementById('player');
 const scoreDisplay = document.getElementById('score');
 let score = 0;
-let moveSpeed = 5; // Velocidade de movimento do jogador
+let moveSpeed = 10; // Velocidade de movimento do jogador
 let obstacleSpeed = 3; // Velocidade de queda dos obstáculos
 let gameInterval;
 
@@ -45,17 +45,18 @@ function isColliding(player, obstacle) {
     );
 }
 
-// Movimenta o jogador
-function movePlayer(direction) {
-    const playerRect = player.getBoundingClientRect();
+// Movimenta o jogador para a posição do toque
+function movePlayerTo(touchX) {
     const gameAreaRect = gameArea.getBoundingClientRect();
-
-    if (direction === 'left' && playerRect.left > gameAreaRect.left) {
-        player.style.left = `${playerRect.left - moveSpeed}px`;
-    }
-    if (direction === 'right' && playerRect.right < gameAreaRect.right) {
-        player.style.left = `${playerRect.left + moveSpeed}px`;
-    }
+    const playerWidth = player.offsetWidth;
+    
+    // Calcula a nova posição do jogador para que ele siga o toque
+    let newX = touchX - gameAreaRect.left - playerWidth / 2;
+    
+    // Mantém o jogador dentro da área do jogo
+    newX = Math.max(0, Math.min(newX, gameArea.clientWidth - playerWidth));
+    
+    player.style.left = `${newX}px`;
 }
 
 // Ponto de término do jogo
@@ -85,11 +86,12 @@ function startGame() {
 // Controle por toque
 window.addEventListener('touchstart', (event) => {
     const touchX = event.touches[0].clientX;
+    movePlayerTo(touchX);
+});
 
-    if (touchX < window.innerWidth / 2) {
-        movePlayer('left');
-    } else {
-        movePlayer('right');
+// Inicia o jogo ao carregar a página
+startGame();
+
     }
 });
 
